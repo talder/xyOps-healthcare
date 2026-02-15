@@ -1,0 +1,307 @@
+{
+	"type": "xypdf",
+	"description": "xyOps Portable Data Object",
+	"version": "1.0",
+	"items": [
+		{
+			"type": "plugin",
+			"data": {
+				"id": "hlth1healthcare",
+				"title": "Healthcare",
+				"enabled": true,
+				"type": "event",
+				"command": "",
+				"script": "healthcare.ps1",
+				"groups": [],
+				"format": "",
+				"params": [
+					{
+						"id": "tool",
+						"title": "Tool",
+						"type": "toolset",
+						"caption": "Select a healthcare tool.",
+						"locked": false,
+						"data": {
+							"tools": [
+								{
+									"id": "hl7Generator",
+									"title": "HL7 Message Generator",
+									"description": "Generate valid HL7 v2.x messages with fake or custom data.",
+									"fields": [
+										{
+											"id": "hl7MessageType",
+											"title": "Message Type",
+											"type": "select",
+											"value": "ADT - Admit/Discharge/Transfer [ADT], ORM - Order Message [ORM], ORU - Observation Result [ORU], SIU - Scheduling [SIU], RDE - Pharmacy Order [RDE], MDM - Medical Document [MDM], DFT - Financial Transaction [DFT], VXU - Vaccination Update [VXU]",
+											"caption": "Select the HL7 message type to generate."
+										},
+										{
+											"id": "hl7EventType",
+											"title": "Event Type",
+											"type": "select",
+											"value": "A01 - Admit [A01], A02 - Transfer [A02], A03 - Discharge [A03], A04 - Register [A04], A05 - Pre-admit [A05], A08 - Update Patient [A08], A11 - Cancel Admit [A11], A13 - Cancel Discharge [A13], A28 - Add Person [A28], A31 - Update Person [A31], O01 - Order [O01], R01 - Result [R01], S12 - Notification [S12], T02 - Request [T02], P03 - Post Detail [P03], V04 - Vaccine Record [V04]",
+											"caption": "Select the event type (primarily for ADT messages)."
+										},
+										{
+											"id": "hl7DataSource",
+											"title": "Data Source",
+											"type": "select",
+											"value": "Use form fields only [field], Use bucket data (form fields override) [bucket]",
+											"caption": "Choose data source. Bucket data can be overridden by form fields below."
+										},
+										{
+											"id": "hl7DataPath",
+											"title": "Bucket Data Path",
+											"type": "text",
+											"value": "",
+											"caption": "Optional dot-notation path prefix (e.g., 'hl7' reads from data.hl7.patientFirstName). Leave empty for root level."
+										},
+										{
+											"id": "hl7PatientId",
+											"title": "Patient ID (MRN)",
+											"type": "text",
+											"value": "",
+											"caption": "Medical Record Number. Leave empty for random/bucket."
+										},
+										{
+											"id": "hl7PatientFirstName",
+											"title": "Patient First Name",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for random fake name."
+										},
+										{
+											"id": "hl7PatientMiddleName",
+											"title": "Patient Middle Name",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for none."
+										},
+										{
+											"id": "hl7PatientLastName",
+											"title": "Patient Last Name",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for random fake name."
+										},
+										{
+											"id": "hl7PatientDOB",
+											"title": "Patient Date of Birth",
+											"type": "text",
+											"value": "",
+											"caption": "Format: YYYYMMDD (e.g., 19850315). Leave empty for random."
+										},
+										{
+											"id": "hl7PatientGender",
+											"title": "Patient Gender",
+											"type": "select",
+											"value": "Random [random], Male [M], Female [F], Other [O], Unknown [U]",
+											"caption": "Patient's gender."
+										},
+										{
+											"id": "hl7PatientSSN",
+											"title": "Patient SSN",
+											"type": "text",
+											"value": "",
+											"caption": "Format: 123-45-6789. Leave empty for random."
+										},
+										{
+											"id": "hl7PatientRace",
+											"title": "Patient Race",
+											"type": "select",
+											"value": "Random [random], White [2106-3], Black/African American [2054-5], Asian [2028-9], Native Hawaiian/Pacific Islander [2076-8], American Indian/Alaska Native [1002-5]",
+											"caption": "CDC race code."
+										},
+										{
+											"id": "hl7PatientMaritalStatus",
+											"title": "Patient Marital Status",
+											"type": "select",
+											"value": "Random [random], Single [S], Married [M], Divorced [D], Widowed [W]",
+											"caption": "Patient's marital status."
+										},
+										{
+											"id": "hl7PatientAddress",
+											"title": "Patient Street Address",
+											"type": "text",
+											"value": "",
+											"caption": "Street address. Leave empty for random."
+										},
+										{
+											"id": "hl7PatientCity",
+											"title": "Patient City",
+											"type": "text",
+											"value": "",
+											"caption": "City. Leave empty for random."
+										},
+										{
+											"id": "hl7PatientState",
+											"title": "Patient State",
+											"type": "text",
+											"value": "",
+											"caption": "State code (e.g., NY, CA). Leave empty for random."
+										},
+										{
+											"id": "hl7PatientZip",
+											"title": "Patient ZIP Code",
+											"type": "text",
+											"value": "",
+											"caption": "ZIP code. Leave empty for random."
+										},
+										{
+											"id": "hl7PatientPhone",
+											"title": "Patient Phone",
+											"type": "text",
+											"value": "",
+											"caption": "Phone number. Leave empty for random."
+										},
+										{
+											"id": "hl7AttendingId",
+											"title": "Attending Physician ID",
+											"type": "text",
+											"value": "",
+											"caption": "Provider ID. Leave empty for random."
+										},
+										{
+											"id": "hl7AttendingFirstName",
+											"title": "Attending Physician First Name",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for random."
+										},
+										{
+											"id": "hl7AttendingLastName",
+											"title": "Attending Physician Last Name",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for random."
+										},
+										{
+											"id": "hl7VisitNumber",
+											"title": "Visit/Encounter Number",
+											"type": "text",
+											"value": "",
+											"caption": "Leave empty for random."
+										},
+										{
+											"id": "hl7PatientClass",
+											"title": "Patient Class",
+											"type": "select",
+											"value": "Random [random], Inpatient [I], Outpatient [O], Emergency [E], Preadmit [P]",
+											"caption": "Patient classification."
+										},
+										{
+											"id": "hl7AssignedLocation",
+											"title": "Assigned Location",
+											"type": "text",
+											"value": "",
+											"caption": "Format: ROOM^BED^FLOOR (e.g., ROOM101^BED1^FLOOR1). Leave empty for random."
+										},
+										{
+											"id": "hl7AdmitDateTime",
+											"title": "Admit Date/Time",
+											"type": "text",
+											"value": "",
+											"caption": "Format: YYYYMMDDHHmm (e.g., 202601151030). Leave empty for current."
+										},
+										{
+											"id": "hl7DischargeDateTime",
+											"title": "Discharge Date/Time",
+											"type": "text",
+											"value": "",
+											"caption": "Format: YYYYMMDDHHmm. Used for A03 discharge events. Leave empty for random future date."
+										},
+										{
+											"id": "hl7AdmitReason",
+											"title": "Admit Reason",
+											"type": "text",
+											"value": "",
+											"caption": "Reason for admission. Leave empty for random."
+										},
+										{
+											"id": "hl7DiagnosisCode",
+											"title": "Diagnosis Code (ICD-10)",
+											"type": "text",
+											"value": "",
+											"caption": "ICD-10 code (e.g., J18.9). Leave empty for random."
+										},
+										{
+											"id": "hl7DiagnosisDescription",
+											"title": "Diagnosis Description",
+											"type": "text",
+											"value": "",
+											"caption": "Description of diagnosis. Leave empty for random."
+										},
+										{
+											"id": "hl7SendingApp",
+											"title": "Sending Application",
+											"type": "text",
+											"value": "",
+											"caption": "Name of sending application. Default: XYOPS"
+										},
+										{
+											"id": "hl7SendingFacility",
+											"title": "Sending Facility",
+											"type": "text",
+											"value": "",
+											"caption": "Name of sending facility. Default: HOSPITAL"
+										},
+										{
+											"id": "hl7ReceivingApp",
+											"title": "Receiving Application",
+											"type": "text",
+											"value": "",
+											"caption": "Name of receiving application. Default: RECEIVER"
+										},
+										{
+											"id": "hl7ReceivingFacility",
+											"title": "Receiving Facility",
+											"type": "text",
+											"value": "",
+											"caption": "Name of receiving facility. Default: CLINIC"
+										}
+									]
+								},
+								{
+									"id": "hl7Parser",
+									"title": "HL7 Message Parser",
+									"description": "Parse, analyze, and validate HL7 v2.x messages.",
+									"fields": [
+										{
+											"id": "hl7ParserSource",
+											"title": "Data Source",
+											"type": "select",
+											"value": "Use text field below [field], Load from file [file], Use bucket data [bucket]",
+											"caption": "Choose where to get the HL7 message."
+										},
+										{
+											"id": "hl7Input",
+											"title": "HL7 Message",
+											"type": "textarea",
+											"value": "",
+											"caption": "Paste your HL7 message here."
+										},
+										{
+											"id": "hl7FilePath",
+											"title": "File Path",
+											"type": "text",
+											"value": "",
+											"caption": "Path to .hl7 file (when source is 'Load from file')."
+										},
+										{
+											"id": "hl7ParserDataPath",
+											"title": "Bucket Data Path",
+											"type": "text",
+											"value": "",
+											"caption": "Dot-notation path to the HL7 message in bucket (e.g., 'hl7Message'). Leave empty for root level."
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"notes": ""
+			}
+		}
+	]
+}
