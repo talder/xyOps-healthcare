@@ -6,7 +6,6 @@
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/talder/xyOps-healthcare/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PowerShell](https://img.shields.io/badge/PowerShell-7.0+-blue.svg)](https://github.com/PowerShell/PowerShell)
-[![HL7](https://img.shields.io/badge/HL7-v2.5.1-red.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)]()
 
 An xyOps Event Plugin for healthcare interoperability, providing HL7 v2.5.1 message generation and parsing tools.
