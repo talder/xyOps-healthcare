@@ -4,14 +4,30 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PowerShell](https://img.shields.io/badge/PowerShell-7.0+-blue.svg)](https://github.com/PowerShell/PowerShell)
 
-An xyOps Event Plugin for healthcare interoperability, providing HL7 v2.x message generation and parsing tools.
+An xyOps Event Plugin for healthcare interoperability, providing HL7 v2.5.1 message generation and parsing tools.
+
+## Disclaimer
+
+**USE AT YOUR OWN RISK.** This software is provided "as is", without warranty of any kind, express or implied. The author and contributors are not responsible for any damages, data loss, or other issues that may arise from the use of this software. Always test in non-production environments first.
+
+---
+
+## HL7 Version
+
+This plugin generates and parses **HL7 v2.5.1** compliant messages. All messages follow strict HL7 v2.5.1 specifications including:
+
+- Proper segment structure and field ordering
+- Correct data types (CE, XCN, PL, TS, etc.)
+- Standard coding systems (ICD-10, CVX, MVX, CPT, LOINC, HL7 tables)
+- Timezone-aware timestamps (e.g., `20260216052926+0100`)
+- Required and recommended segments per message type
 
 ## Tools
 
 | Tool | Description |
 |------|-------------|
-| HL7 Message Generator | Generate valid HL7 v2.x messages with fake or custom data |
-| HL7 Message Parser | Parse, analyze, and validate HL7 v2.x messages |
+| HL7 Message Generator | Generate valid HL7 v2.5.1 messages with fake or custom data |
+| HL7 Message Parser | Parse, analyze, and validate HL7 v2.5.1 messages |
 
 ## Installation
 
@@ -24,7 +40,7 @@ git clone https://github.com/talder/xyOps-healthcare.git
 
 ## HL7 Message Generator
 
-Generate valid HL7 v2.x messages for testing healthcare integrations.
+Generate valid HL7 v2.5.1 messages for testing healthcare integrations.
 
 ### Data Sources
 
@@ -137,31 +153,66 @@ Copy and paste this template into your bucket and fill in the values you need:
 
 ### Supported Message Types
 
-| Type | Name | Description |
-|------|------|-------------|
-| ADT | Admit/Discharge/Transfer | Patient administration events |
-| ORM | Order Message | Lab and radiology orders |
-| ORU | Observation Result | Lab results |
-| SIU | Scheduling | Appointments |
-| RDE | Pharmacy Order | Medication orders |
-| MDM | Medical Document | Clinical documents |
-| DFT | Financial Transaction | Billing |
-| VXU | Vaccination Update | Immunizations |
+| Type | Name | Segments | Description |
+|------|------|----------|-------------|
+| ADT | Admit/Discharge/Transfer | MSH, EVN, PID, PV1, DG1 | Patient administration events |
+| ORM | Order Message | MSH, PID, PV1, ORC, OBR | Lab and radiology orders |
+| ORU | Observation Result | MSH, PID, PV1, OBR, OBX | Lab results with LOINC codes |
+| SIU | Scheduling | MSH, PID, PV1, SCH, AIS, AIL, AIP | Appointments with resources |
+| RDE | Pharmacy Order | MSH, PID, PV1, ORC, RXE, RXR | Medication orders |
+| MDM | Medical Document | MSH, PID, TXA, OBX | Clinical documents |
+| DFT | Financial Transaction | MSH, PID, PV1, FT1 | Billing with CPT codes |
+| VXU | Vaccination Update | MSH, PID, ORC, RXA, RXR, OBX | Immunizations with CVX/MVX codes |
 
 ### ADT Event Types
 
-| Event | Description |
-|-------|-------------|
-| A01 | Admit/Visit Notification |
-| A02 | Transfer a Patient |
-| A03 | Discharge/End Visit |
-| A04 | Register a Patient |
-| A05 | Pre-admit a Patient |
-| A08 | Update Patient Information |
-| A11 | Cancel Admit |
-| A13 | Cancel Discharge |
-| A28 | Add Person Information |
-| A31 | Update Person Information |
+| Event | Description | Diagnosis Type |
+|-------|-------------|----------------|
+| A01 | Admit/Visit Notification | A (Admitting) |
+| A02 | Transfer a Patient | W (Working) |
+| A03 | Discharge/End Visit | F (Final) |
+| A04 | Register a Patient | A (Admitting) |
+| A05 | Pre-admit a Patient | W (Working) |
+| A08 | Update Patient Information | W (Working) |
+| A11 | Cancel Admit | W (Working) |
+| A13 | Cancel Discharge | W (Working) |
+| A28 | Add Person Information | W (Working) |
+| A31 | Update Person Information | W (Working) |
+
+### Message Type Details
+
+#### ADT (Admit/Discharge/Transfer)
+- **EVN**: Event type segment with recorded timestamp
+- **PV1**: Patient visit with attending physician (XCN format), visit number, admit/discharge timestamps
+- **DG1**: Diagnosis with ICD-10 coding (I10), diagnosing clinician, context-appropriate diagnosis type
+
+#### ORU (Observation Result)
+- **OBR**: Observation request with LOINC-coded tests
+- **OBX**: Results with reference ranges, abnormal flags (H/L/N), units
+
+#### SIU (Scheduling)
+- **SCH**: Placer and filler appointment IDs, appointment type (HL70276), timing, filler status (HL70278)
+- **AIS**: Appointment information service
+- **AIL**: Location resource with duration
+- **AIP**: Provider resource
+
+#### RDE (Pharmacy Order)
+- **ORC**: Order control with status (IP=In Process for new orders)
+- **RXE**: Proper field positions - RXE-3 (dose), RXE-4 (max, empty), RXE-5 (units as CE), RXE-6 (form)
+- **RXR**: Route with HL70162 coding
+
+#### MDM (Medical Document)
+- **TXA**: Document type (HL70270), unique document ID (separate from message control ID), completion status (HL70271)
+- **OBX**: Document content with proper identifier
+
+#### DFT (Financial Transaction)
+- **FT1**: Transaction ID, CPT procedure codes, transaction amount, diagnosis (ICD-10), performing provider
+
+#### VXU (Vaccination Update)
+- **ORC**: Order with filler order number
+- **RXA**: CVX vaccine codes, dose amount/units (UCUM), lot number, expiration, manufacturer (MVX), completion status
+- **RXR**: Route (IM) and administration site (HL70163)
+- **OBX**: Vaccine funding eligibility (LOINC-coded)
 
 ### Example Output
 
@@ -176,9 +227,19 @@ Copy and paste this template into your bucket and fill in the values you need:
 }
 ```
 
+### Example HL7 v2.5.1 Message (ADT^A01)
+
+```
+MSH|^~\&|XYOPS|HOSPITAL|RECEIVER|CLINIC|20260216052647+0100||ADT^A01|NSARQN2S8P|P|2.5.1|||AL|AL
+EVN|A01|20260216052647+0100
+PID|1||VOAWYSEF^^^HOSPITAL^MR||Miller^Michael||19730213|M
+PV1|1|O|ROOM422^BED2^FLOOR1||||TSTOO8^Brown^Michael^^^DR||||||||||||G9M8X4UYIS|||||||||||||||||||||||202602160526
+DG1|1||S82.90XA^Unspecified fracture of lower leg, initial encounter^I10||20260216052647+0100|A||||||||||TSTOO8^Brown^Michael
+```
+
 ## HL7 Message Parser
 
-Parse and validate HL7 v2.x messages from text, files, or bucket data.
+Parse and validate HL7 v2.5.1 messages from text, files, or bucket data.
 
 ### Data Sources
 
@@ -241,5 +302,4 @@ This project is licensed under the MIT License.
 
 ## Author
 
-**Tim Alderweireldt**
-- Year: 2026
+**Tim Alderweireldt (c)2026**
